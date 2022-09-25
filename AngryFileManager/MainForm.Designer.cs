@@ -65,6 +65,12 @@
             this.iconList.Images.SetKeyName(0, "icons8-folder-16.png");
             this.iconList.Images.SetKeyName(1, "icons8-file-16.png");
             this.iconList.Images.SetKeyName(2, "icons8-ssd-16.png");
+            this.iconList.Images.SetKeyName(3, "icons8-image-16.png");
+            this.iconList.Images.SetKeyName(4, "icons8-video-playlist-16.png");
+            this.iconList.Images.SetKeyName(5, "icons8-utorrent-16 (1).png");
+            this.iconList.Images.SetKeyName(6, "icons8-pdf-file-16.png");
+            this.iconList.Images.SetKeyName(7, "icons8-winrar-16.png");
+            this.iconList.Images.SetKeyName(8, "icons8-itunes-16.png");
             // 
             // backButton
             // 
@@ -103,6 +109,7 @@
             this.detailsView.TabIndex = 3;
             this.detailsView.UseCompatibleStateImageBehavior = false;
             this.detailsView.View = System.Windows.Forms.View.Details;
+            this.detailsView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.detailsView_ColumnClick);
             this.detailsView.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             this.detailsView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
             // 
@@ -204,5 +211,6 @@
         private ColumnHeader DetailsSize;
         private ColumnHeader DetailsType;
         private ColumnHeader DetailsDate;
+        private ListViewColumnSorter lvwColumnSorter;
     }
 }

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.IO;
 
 namespace AngryFileManager
 {
@@ -11,6 +10,8 @@ namespace AngryFileManager
         public MainForm()
         {
             InitializeComponent();
+            lvwColumnSorter = new ListViewColumnSorter();
+            detailsView.ListViewItemSorter = lvwColumnSorter;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -79,7 +80,8 @@ namespace AngryFileManager
                     item.SubItems.Add(size);
                     item.SubItems.Add(fileInfo.Extension.ToLowerInvariant());
                     item.SubItems.Add(fileInfo.LastWriteTime.ToString("g"));
-                    item.ImageIndex = 1;
+                    var imageIndex = GetImageIndex(fileInfo.Extension.ToLowerInvariant());
+                    item.ImageIndex = imageIndex;
 
                     detailsView.Items.Add(item);
                 }
@@ -89,6 +91,60 @@ namespace AngryFileManager
                 if (exception is AccessViolationException or UnauthorizedAccessException)
                 {
                     ExceptionHandler.ShowUserException("Нет доступа", GoUp, LoadButtonAction);
+                }
+            }
+        }
+
+        private int GetImageIndex(string fileExtension)
+        {
+            switch (fileExtension)
+            {
+                default:
+                {
+                    return 1;
+                }
+
+                case ".jpg":
+                case ".heic":
+                case ".gif":
+                case ".jfif":
+                case ".webp":
+                case ".png":
+                case ".ico":
+                {
+                    return 3;
+                }
+
+                case ".mp4":
+                case ".avi":
+                case ".mpeg4":
+                case ".mkv":
+                {
+                    return 4;
+                }
+
+                case ".torrent":
+                {
+                    return 5;
+                }
+
+                case ".pdf":
+                {
+                    return 6;
+                }
+
+                case ".zip":
+                case ".rar":
+                case ".7z":
+                {
+                    return 7;
+                }
+
+                case ".mp3":
+                case ".wav":
+                case ".mp2":
+                {
+                    return 8;
                 }
             }
         }
@@ -266,6 +322,28 @@ namespace AngryFileManager
         {
             var selectedFileAttributes = File.GetAttributes(path);
             return (selectedFileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
+        }
+
+        // msdn
+        private void detailsView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // Determine if clicked column is already the column that is being sorted.
+            if (e.Column == lvwColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending 
+                    ? SortOrder.Descending 
+                    : SortOrder.Ascending;
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                lvwColumnSorter.SortColumn = e.Column;
+                lvwColumnSorter.Order = SortOrder.Ascending;
+            }
+
+            // Perform the sort with these new sort options.
+            detailsView.Sort();
         }
     }
 }
